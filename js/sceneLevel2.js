@@ -2,6 +2,10 @@ class SceneLevel2 extends Phaser.Scene{
     constructor(){
         super('SceneLevel2');
     }
+    init(data){
+        this.deathCount = data.deathCount;
+        console.log(this.deathCount);
+    }
     preload(){
         this.load.image('tileset2', 'images/tilesets/cave.png');
         this.load.tilemapTiledJSON('map2', 'images/tilemaps/level2.json');
@@ -12,7 +16,7 @@ class SceneLevel2 extends Phaser.Scene{
         this.gameHeight = 416;
         const scaleRatio = 0.65;
 
-        this.cameras.main.setBackgroundColor('#D3D3D3');
+        this.cameras.main.setBackgroundColor('#5A5A5A');
 
         //tilemap and tileset stuff
         const map = this.make.tilemap({key: 'map2'});
@@ -26,11 +30,15 @@ class SceneLevel2 extends Phaser.Scene{
         worldLayer.setCollisionByExclusion(-1, true);
         hazardLayer.setCollisionByExclusion(-1, true);
 
+        //text on screen
+        this.deathBox = this.add.text(10, 10, 'Deaths: ' + this.deathCount).setColor('black');
+
         //winning thing
         this.createGold();
 
         //player stuff
         this.createPlayer([floorLayer, elevationLayer], worldLayer, hazardLayer);
+        
     }
     update(){
         this.updatePlayer();
@@ -66,10 +74,11 @@ class SceneLevel2 extends Phaser.Scene{
             this.player.flipX = !this.player.flipX;
         });
         this.physics.add.collider(this.player, hazards, () => {
-            this.scene.restart();
+            this.deathCount += 1;
+            this.scene.restart({deathCount: this.deathCount});
         });
         this.physics.add.collider(this.player, this.gold, () => {
-            this.scene.start('SceneLevel3');
+            this.scene.start('SceneLevel3', {deathCount: this.deathCount});
         })
 
         //input stuff
