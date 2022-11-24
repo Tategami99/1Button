@@ -3,8 +3,6 @@ class SceneLevel1 extends Phaser.Scene{
         super('SceneLevel1');
     }
     preload(){
-        this.load.spritesheet('player', 'images/player.png', {frameWidth: 24, frameHeight: 24});
-        this.load.image('gold', 'images/gold.png');
         this.load.image('tileset1', 'images/tilesets/original.png');
         this.load.tilemapTiledJSON('map1', 'images/tilemaps/level1.json');
     }
@@ -19,24 +17,24 @@ class SceneLevel1 extends Phaser.Scene{
         //tilemap and tileset stuff
         const map = this.make.tilemap({key: 'map1'});
         const tileset1 = map.addTilesetImage('original', 'tileset1');
-        this.floorLayer = map.createLayer('Floor', tileset1, 0, 0);
-        this.elevationLayer = map.createLayer('Elevation', tileset1, 0, 0);
-        this.hazardLayer = map.createLayer('Hazards', tileset1, 0, 0);
-        this.floorLayer.setCollisionByExclusion(-1, true);
-        this.elevationLayer.setCollisionByExclusion(-1, true);
-        this.hazardLayer.setCollisionByExclusion(-1, true);
+        const floorLayer = map.createLayer('Floor', tileset1, 0, 0);
+        const elevationLayer = map.createLayer('Elevation', tileset1, 0, 0);
+        const hazardLayer = map.createLayer('Hazards', tileset1, 0, 0);
+        floorLayer.setCollisionByExclusion(-1, true);
+        elevationLayer.setCollisionByExclusion(-1, true);
+        hazardLayer.setCollisionByExclusion(-1, true);
 
         //winning thing
         this.createGold();
 
         //player stuff
-        this.createPlayer();
+        this.createPlayer([floorLayer, elevationLayer], hazardLayer);
     }
     update(){
         this.updatePlayer();
     }
 
-    createPlayer(){
+    createPlayer(layers, hazards){
         //creation stuff
         const playerScale = 1.25
         this.justAfter = false;
@@ -55,12 +53,12 @@ class SceneLevel1 extends Phaser.Scene{
         this.player.body.world.on('worldbounds', () => {
             this.velocityScaleX *= -1;
             this.velocityScaleY = 1.5;
-            this.player.flipX = true;
+            this.player.flipX = !this.player.flipX;
         });
 
         //collision stuff
-        this.physics.add.collider(this.player, [this.floorLayer, this.elevationLayer]);
-        this.physics.add.collider(this.player, this.hazardLayer, () => {
+        this.physics.add.collider(this.player, layers);
+        this.physics.add.collider(this.player, hazards, () => {
             this.scene.restart();
         });
         this.physics.add.collider(this.player, this.gold, () => {
@@ -102,6 +100,5 @@ class SceneLevel1 extends Phaser.Scene{
     createGold(){
         this.gold = this.physics.add.staticSprite(20, 160, 'gold').setScale(2.5, 2.5);
         this.gold.setActive();
-        //this.gold.body.gravity = false;
     }
 }

@@ -15,7 +15,7 @@ window.onload = function(){
                 gravity: {y: 10}
             }
         },
-        scene: [SceneMain, SceneLevelSelect, SceneLevel1, SceneLevel2]
+        scene: [SceneMain, SceneLevelSelect, SceneLevel1, SceneLevel2, SceneLevel3]
     };
     var game = new Phaser.Game(config);
 }
