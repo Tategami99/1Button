@@ -46,7 +46,7 @@ class SceneLevel5 extends Phaser.Scene{
         //creation stuff
         const playerScale = 1
         this.justAfter = false;
-        this.player = this.physics.add.sprite(15, 120, 'player').setScale(playerScale, playerScale);
+        this.player = this.physics.add.sprite(15, 20, 'player').setScale(playerScale, playerScale);
         this.player.setActive(true);
         this.velocityScaleX = 1;
         this.velocityScaleY = 1;
