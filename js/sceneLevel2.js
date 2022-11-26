@@ -16,7 +16,7 @@ class SceneLevel2 extends Phaser.Scene{
         this.gameHeight = 416;
         const scaleRatio = 0.65;
 
-        this.cameras.main.setBackgroundColor('#5A5A5A');
+        this.cameras.main.setBackgroundColor('#FFFFFF');
 
         //tilemap and tileset stuff
         const map = this.make.tilemap({key: 'map2'});

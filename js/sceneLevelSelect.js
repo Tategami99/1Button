@@ -16,6 +16,7 @@ class SceneLevelSelect extends Phaser.Scene{
         this.load.image('level2', 'images/level2.png');
         this.load.image('level3', 'images/level3.png');
         this.load.image('level4', 'images/level4.png');
+        this.load.image('level5', 'images/level5.png');
 
         //stuff used for every level
         this.load.spritesheet('player', 'images/player.png', {frameWidth: 24, frameHeight: 24});
@@ -30,7 +31,7 @@ class SceneLevelSelect extends Phaser.Scene{
 
         this.levelSelected = 'N/A';
 
-        const levels = [this.level1, this.level2, this.level3, this.level4];
+        const levels = [this.level1, this.level2, this.level3, this.level4, this.level5];
         for(let i = 0; i<levels.length; i++){
             this.createLevel(i, i+1);
         }

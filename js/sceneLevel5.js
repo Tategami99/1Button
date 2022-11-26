@@ -1,14 +1,14 @@
-class SceneLevel4 extends Phaser.Scene{
+class SceneLevel5 extends Phaser.Scene{
     constructor(){
-        super('SceneLevel4');
+        super('SceneLevel5');
     }
     init(data){
         this.deathCount = data.deathCount;
         console.log(this.deathCount);
     }
     preload(){
-        this.load.image('tileset4', 'images/tilesets/sky.png');
-        this.load.tilemapTiledJSON('map4', 'images/tilemaps/level4.json');
+        this.load.image('tileset5', 'images/tilesets/city.png');
+        this.load.tilemapTiledJSON('map5', 'images/tilemaps/level5.json');
     }
     create(){
         //important variables
@@ -16,16 +16,17 @@ class SceneLevel4 extends Phaser.Scene{
         this.gameHeight = 416;
         const scaleRatio = 0.65;
         
-        this.cameras.main.setBackgroundColor('#87ceeb');
+        this.cameras.main.setBackgroundColor('#eeaf61');
 
         //tilemap and tileset stuff
-        const map = this.make.tilemap({key: 'map4'});
-        const tileset1 = map.addTilesetImage('sky', 'tileset4');
-        const floorLayer = map.createLayer('skyFloor', tileset1, 0, 0);
-        const elevationLayer = map.createLayer('skyElevation', tileset1, 0, 0);
-        const hazardLayer = map.createLayer('skyHazards', tileset1, 0, 0);
+        const map = this.make.tilemap({key: 'map5'});
+        const tileset1 = map.addTilesetImage('city', 'tileset5');
+        const backgroundLayer = map.createLayer('background1', tileset1, 0, 0);
+        const floorLayer = map.createLayer('floor1', tileset1, 0, 0);
+        const worldLayer = map.createLayer('world', tileset1, 0, 0);
+        const hazardLayer = map.createLayer('hazards', tileset1, 0, 0);
         floorLayer.setCollisionByExclusion(-1, true);
-        elevationLayer.setCollisionByExclusion(-1, true);
+        worldLayer.setCollisionByExclusion(-1, true);
         hazardLayer.setCollisionByExclusion(-1, true);
 
         //text on screen
@@ -35,17 +36,17 @@ class SceneLevel4 extends Phaser.Scene{
         this.createGold();
 
         //player stuff
-        this.createPlayer([floorLayer, elevationLayer], hazardLayer);
+        this.createPlayer(floorLayer, worldLayer, hazardLayer);
     }
     update(){
         this.updatePlayer();
     }
 
-    createPlayer(layers, hazards){
+    createPlayer(layers, world, hazards){
         //creation stuff
-        const playerScale = 1.25
+        const playerScale = 1
         this.justAfter = false;
-        this.player = this.physics.add.sprite(15, 325, 'player').setScale(playerScale, playerScale);
+        this.player = this.physics.add.sprite(15, 120, 'player').setScale(playerScale, playerScale);
         this.player.setActive(true);
         this.velocityScaleX = 1;
         this.velocityScaleY = 1;
@@ -65,12 +66,17 @@ class SceneLevel4 extends Phaser.Scene{
 
         //collision stuff
         this.physics.add.collider(this.player, layers);
+        this.physics.add.collider(this.player, world, () =>{
+            this.velocityScaleX *= -1;
+            this.velocityScaleY = 1.5;
+            this.player.flipX = !this.player.flipX;
+        });
         this.physics.add.collider(this.player, hazards, () => {
             this.deathCount += 1;
             this.scene.restart({deathCount: this.deathCount});
         });
         this.physics.add.collider(this.player, this.gold, () => {
-            this.scene.start('SceneLevel5', {deathCount: this.deathCount});
+            this.scene.start('SceneLevelSelect', {deathCount: this.deathCount});
         })
 
         //input stuff
@@ -106,7 +112,7 @@ class SceneLevel4 extends Phaser.Scene{
     }
 
     createGold(){
-        this.gold = this.physics.add.staticSprite(600, 156, 'gold').setScale(1.5, 1.5);
+        this.gold = this.physics.add.staticSprite(220, 390, 'gold').setScale(1.5, 1.5);
         this.gold.setActive();
     }
 }
