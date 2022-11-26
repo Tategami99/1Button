@@ -27,6 +27,8 @@ class SceneLevelSelect extends Phaser.Scene{
         this.gameWidth = 640;
         this.gameHeight = 416;
 
+        this.cameras.main.setBackgroundColor('#87ceeb');
+
         this.keyE = this.input.keyboard.addKey('E');
 
         this.levelSelected = 'N/A';

@@ -13,6 +13,8 @@ class SceneMain extends Phaser.Scene {
         this.gameWidth = 640;
         this.gameHeight = 416;
 
+        this.cameras.main.setBackgroundColor('#87ceeb');
+
         this.title = this.add.image(0.5*this.gameWidth, 0.15*this.gameHeight, 'title');
         this.play = this.add.image(0.5*this.gameWidth, 0.5*this.gameHeight, 'play');
         this.play.setScale(1.5, 1.5);
